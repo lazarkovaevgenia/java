@@ -35,3 +35,128 @@ class MySolution {
         System.out.println("Привет," + " " + x);
     }
 }
+
+
+"""
+/step/4
+Напишите программу, которая считывает строку, а затем выводит эту же строку на печать 3 раза в столбик.
+Sample Input:
+Java сложный, прямо капец
+
+Sample Output:
+Java сложный, прямо капец
+Java сложный, прямо капец
+Java сложный, прямо капец
+
+
+
+import java.util.Scanner;
+
+class MySolution {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String y = sc.nextLine();
+        System.out.println(y);
+        System.out.println(y);
+        System.out.println(y);
+    }
+}
+
+"""
+/step/5
+Напишите программу, которая считывает строку, а затем выводит эту же строку на печать 2 раза в первой строке через пробел, а затем ещё два раза в столбик.
+Sample Input:
+Java forever!
+
+Sample Output:
+Java forever! Java forever!
+Java forever!
+Java forever!
+
+import java.util.Scanner;
+
+class MySolution {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        System.out.println(s + " " + s);
+        System.out.println(s);
+        System.out.println(s);
+    }
+}
+
+"""
+/step/6
+Напишите программу, которая считывает целое число t - температуру воздуха, и выводит фразу:
+Температура воздуха сегодня: t градусов.
+
+Sample Input:
+18
+
+Sample Output:
+Температура воздуха сегодня: 18 градусов.
+
+import java.util.Scanner;
+
+class MySolution {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int t = sc.nextInt();
+        System.out.println("Температура воздуха сегодня:" + " " + t + " " + "градусов.");
+    }
+}
+
+"""
+/step/7
+Напишите программу, которая принимает три числа - год, месяц и день и выводит на печать фразу:
+DD:MM:YYYY.
+Проверять валидность даты не требуется.
+
+Sample Input:
+2021
+01
+30
+
+Sample Output:
+30:01:2021
+
+import java.util.Scanner;
+
+class MySolution {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String y = sc.nextLine();
+        String m = sc.nextLine();
+        String d = sc.nextLine();
+        System.out.println(d + ":" + m + ":" + y);
+    }
+}
+
+"""
+/step/8
+Давайте напишем программу-помощника, которая сообщает, сколько у Вас новых сообщений на почте.
+Формат ввода. На первой строке вводится имя пользователя, на второй имя помощника, на третьей - количество сообщений.
+Формат вывода - в соответствии с образцом.
+
+Sample Input:
+Илон Маск
+Рогозин
+19
+
+Sample Output:
+Привет, Илон Маск, это твой помощник Рогозин.
+У тебя 19 новых писем.
+
+import java.util.Scanner;
+
+class MyClass {
+    public static void main(String [] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        String p = sc.nextLine();
+        String n = sc.nextLine();
+        System.out.println("Привет," + " " + s + "," + " " + "это твой помощник" + " " + p + ".");
+        System.out.println("У тебя" + " " + n + " " + "новых писем.");
+    }
+}
+
