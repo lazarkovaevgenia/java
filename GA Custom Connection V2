@@ -1,0 +1,59 @@
+function onOpen() {
+  var ui = SpreadsheetApp.getUi();
+  ui.createMenu('Custom Menu')
+    .addItem('Google Analytics', 'getGoogleAnalyticsData')
+    .addToUi();
+}
+
+function getGoogleAnalyticsData() {
+  var today = new Date();
+  var oneWeekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+  var startDate = Utilities.formatDate(oneWeekAgo, Session.getTimeZone(), '2023-01-01');
+  var endDate = Utilities.formatDate(today, Session.getTimeZone(), '2023-03-20');
+
+  var tableId = 'ga:191941927';
+
+  var dimensionNames = [
+    { name: 'Experiment Name', id: 'ga:experimentName' },
+    { name: 'Experiment Variant', id: 'ga:experimentVariant' }
+  ];
+  var dimensions = dimensionNames.map(function (d) { return d.id; }).join(',');
+
+  var metricNames = [
+    { name: 'Sessions', id: 'ga:sessions' },
+    { name: 'Product Adds to Cart', id: 'ga:productAddsToCart' },
+    { name: 'Transactions', id: 'ga:transactions' },
+    { name: 'Transaction Revenue', id: 'ga:transactionRevenue' }
+  ];
+  var metric = metricNames.map(function (m) { return m.id; }).join(',');
+
+  var options = {
+    'dimensions': dimensions,
+    'sort': '-ga:sessions',
+    'filters': 'ga:experimentName==FYL-027 | Emphasize Customer Service Quality V2',
+    'max-results': 25
+  };
+  var report = Analytics.Data.Ga.get(tableId, startDate, endDate, metric, options);
+
+  if (report.rows) {
+    var spreadsheet = SpreadsheetApp.getActive();
+    var sheet = spreadsheet.getActiveSheet();
+
+    var headers = [];
+    dimensionNames.forEach(function (d) { headers.push(d.name); });
+    metricNames.forEach(function (m) { headers.push(m.name); });
+    sheet.appendRow(headers);
+
+    var rows = [];
+    report.rows.forEach(function (r) {
+      var row = [];
+      dimensionNames.forEach(function (d) { row.push(r[report.columnHeaders.findIndex(function (h) { return h.name === d.id; })]); });
+      metricNames.forEach(function (m) { row.push(parseInt(r[report.columnHeaders.findIndex(function (h) { return h.name === m.id; })], 10)); });
+      rows.push(row);
+    });
+    sheet.getRange(2, 1, rows.length, headers.length).setValues(rows);
+  } else {
+    Logger.log('No rows returned.');
+  }
+}
