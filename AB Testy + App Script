@@ -1,0 +1,22 @@
+function importData() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName('Sheet1'); // Replace 'Sheet1' with the name of your sheet
+  var url = 'https://api.abtasty.com/v2/campaigns'; // Replace with the A/B Tasty API endpoint for the data you want to retrieve
+  var headers = {
+    'Authorization': 'Bearer YOUR_API_KEY_HERE' // Replace with your A/B Tasty API key
+  };
+  var options = {
+    'headers': headers
+  };
+  var response = UrlFetchApp.fetch(url, options);
+  var data = JSON.parse(response.getContentText());
+  var rows = [];
+  for (var i = 0; i < data.length; i++) {
+    var row = [];
+    row.push(data[i].name); // Replace with the fields you want to export from A/B Tasty
+    row.push(data[i].start_date);
+    row.push(data[i].end_date);
+    rows.push(row);
+  }
+  sheet.getRange(2, 1, rows.length, rows[0].length).setValues(rows); // Replace '2, 1' with the starting row and column of your data in the sheet
+}
