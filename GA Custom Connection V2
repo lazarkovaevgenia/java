@@ -22,9 +22,9 @@ function getGoogleAnalyticsData() {
 
   var metricNames = [
     { name: 'Sessions', id: 'ga:sessions' },
-    { name: 'Product Adds to Cart', id: 'ga:productAddsToCart' },
+    { name: 'Add to Cart', id: 'ga:productAddsToCart' },
     { name: 'Transactions', id: 'ga:transactions' },
-    { name: 'Transaction Revenue', id: 'ga:transactionRevenue' }
+    { name: 'Revenue', id: 'ga:transactionRevenue' }
   ];
   var metric = metricNames.map(function (m) { return m.id; }).join(',');
 
