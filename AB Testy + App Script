@@ -20,3 +20,66 @@ function importData() {
   }
   sheet.getRange(2, 1, rows.length, rows[0].length).setValues(rows); // Replace '2, 1' with the starting row and column of your data in the sheet
 }
+
+_____________________________________________
+1. Retrieve your AB Tasty API key:
+a. Log in to your AB Tasty account and navigate to the "Settings" section.
+b. Select "API keys" from the left-hand menu.
+c. Create a new API key or copy an existing one.
+
+2. Open the Apps Script editor:
+a. From within your Google Sheets document, click on "Tools" in the top menu bar.
+b. Select "Script editor" from the dropdown menu.
+c. The Apps Script editor will open in a new tab.
+
+3. Set up the AB Tasty API request and retrieve the data:
+
+function getData() {
+  var url = "https://api.abtasty.com/v2/data/analysis";
+
+  var payload = {
+    "analysis_id": "<analysis_id>",
+    "start_date": "<start_date>",
+    "end_date": "<end_date>",
+    "dimensions": "<dimensions>",
+    "metrics": "<metrics>"
+  };
+
+  var headers = {
+    "Authorization": "Bearer <API_key>",
+    "Content-Type": "application/json"
+  };
+
+  var options = {
+    "method": "post",
+    "headers": headers,
+    "payload": JSON.stringify(payload)
+  };
+
+  var response = UrlFetchApp.fetch(url, options);
+  var data = JSON.parse(response.getContentText());
+  return data;
+}
+
+4. Write the data to the Google Sheets document:
+
+function writeData() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("<sheet_name>");
+  var range = sheet.getRange("<range_name>");
+  var data = getData();
+
+  var values = data.data.map(function(row) {
+    return [row.dimension_values[0].value, row.metric_values[0].value];
+  });
+
+  range.setValues(values);
+}
+
+5. Save the script and run the writeData() function:
+a. Save the script by clicking on "File" in the top menu bar and selecting "Save".
+b. Run the writeData() function by clicking on the "Run" button in the toolbar or by going to "Run" > "writeData" in the top menu bar.
+c. The script will write the AB Tasty data to the specified sheet and range within the Google Sheets document.
+
+This is a basic example of how to export AB Tasty data to Google Sheets using Apps Script.
+Note that you will need to replace the placeholders (<analysis_id>, <start_date>, <end_date>, <dimensions>, <metrics>,
+<API_key>, <sheet_name>, and <range_name>) with the appropriate values for your use case.
