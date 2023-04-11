@@ -34,6 +34,15 @@ c. The Apps Script editor will open in a new tab.
 
 3. Set up the AB Tasty API request and retrieve the data:
 
+###
+function onOpen() {
+  var ui = SpreadsheetApp.getUi();
+  ui.createMenu('Custom Menu')
+    .addItem('Google Analytics', 'getData')
+    .addToUi();
+}
+###
+
 function getData() {
   var url = "https://api.abtasty.com/v2/data/analysis";
 
