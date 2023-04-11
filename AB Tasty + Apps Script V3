@@ -1,0 +1,45 @@
+function onOpen() {
+  var ui = SpreadsheetApp.getUi();
+  ui.createMenu('Custom Menu')
+    .addItem('AB Tasty', 'getData')
+    .addToUi();
+}
+
+function getData() {
+  var url = "https://api.abtasty.com/v2/data/analysis";
+
+  var payload = {
+    "analysis_id": "<analysis_id>",
+    "start_date": "<start_date>",
+    "end_date": "<end_date>",
+    "dimensions": "experiment_name",
+    "metrics": "sessions,avg_order_value,revenue,transactions,bounces"
+  };
+
+  var headers = {
+    "Authorization": "Bearer <API_key>",
+    "Content-Type": "application/json"
+  };
+
+  var options = {
+    "method": "post",
+    "headers": headers,
+    "payload": JSON.stringify(payload)
+  };
+
+  var response = UrlFetchApp.fetch(url, options);
+  var data = JSON.parse(response.getContentText());
+  return data;
+}
+
+function writeData() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("<sheet_name>");
+  var range = sheet.getRange("<range_name>");
+  var data = getData();
+
+  var values = data.data.map(function(row) {
+    return [row.dimension_values[0].value, row.metric_values[0].value, row.metric_values[1].value, row.metric_values[2].value, row.metric_values[3].value, row.metric_values[4].value];
+  });
+
+  range.setValues(values);
+}
