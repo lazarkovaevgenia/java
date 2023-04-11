@@ -1,0 +1,44 @@
+function getABTastyData() {
+  const url = "https://api.abtasty.com/v2/data/analysis";
+  const analysisId = "<analysis_id>";
+  const startDate = "<start_date>";
+  const endDate = "<end_date>";
+  const dimensions = "<dimensions>";
+  const metrics = "<metrics>";
+  const payload = {
+    analysis_id: analysisId,
+    start_date: startDate,
+    end_date: endDate,
+    dimensions: dimensions,
+    metrics: metrics
+  };
+  const headers = {
+    Authorization: "Bearer <API_key>",
+    "Content-Type": "application/json"
+  };
+  const options = {
+    method: "post",
+    headers: headers,
+    payload: JSON.stringify(payload)
+  };
+  const response = UrlFetchApp.fetch(url, options);
+  const data = JSON.parse(response.getContentText());
+  return data;
+}
+
+function writeToGoogleSheet() {
+  const sheetName = "<sheet_name>";
+  const rangeName = "<range_name>";
+  const data = getABTastyData().data;
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+  const range = sheet.getRange(rangeName);
+  const values = data.map(row => [row.dimension_values[0].value, row.metric_values[0].value]);
+  range.setValues(values);
+}
+
+function onOpen() {
+  SpreadsheetApp.getUi()
+    .createMenu("AB Tasty Data")
+    .addItem("Export to Google Sheets", "writeToGoogleSheet")
+    .addToUi();
+}
