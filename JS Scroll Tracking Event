@@ -1,0 +1,35 @@
+// Initialize variables
+let maxScrollDepthReached = 0;
+let scrollTimeout = null;
+
+window.addEventListener('scroll', () => {
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  const scrollHeight = document.documentElement.scrollHeight;
+  const clientHeight = document.documentElement.clientHeight;
+  const scrollPosition = scrollTop + clientHeight;
+  const scrollPercentage = (scrollPosition / scrollHeight) * 100;
+
+  // Update maximum scroll depth reached
+  if (scrollPercentage > maxScrollDepthReached) {
+    maxScrollDepthReached = scrollPercentage;
+  }
+
+  // Clear previous timeout
+  if (scrollTimeout) {
+    clearTimeout(scrollTimeout);
+  }
+
+  // Set new timeout to check scroll depth after user stops scrolling
+  scrollTimeout = setTimeout(() => {
+    if (maxScrollDepthReached >= 75) {
+      window.dataLayer.push({'event': 'scrollDepth75Percent'});
+    } else if (maxScrollDepthReached >= 50) {
+      window.dataLayer.push({'event': 'scrollDepth50Percent'});
+    } else if (maxScrollDepthReached >= 25) {
+      window.dataLayer.push({'event': 'scrollDepth25Percent'});
+    }
+
+    // Reset maximum scroll depth for next pageview
+    maxScrollDepthReached = 0;
+  }, 1500); // Delay of 1.5 seconds
+});
